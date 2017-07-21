@@ -1,7 +1,7 @@
 ---
-  postgresql_pkg:
+postgresql_pkg:
     v6: "postgresql91-server"
     v7: "postgresql-server"
-  postgresql_init:
+postgresql_init:
     '6': "/etc/init.d/postgresql initdb en_US.UTF-8"
     '7': "/bin/postgresql-setup initdb"

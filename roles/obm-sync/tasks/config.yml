@@ -1,18 +1,27 @@
 ---
 - name: Deploy OBM Automaton configuration
-  template: src=03-sync.ini dest=/etc/obm/conf/03-sync.ini
+  template:
+    src: 03-sync.ini
+    dest: /etc/obm/conf/03-sync.ini
+  become: true
   tags: obm-sync
 
 - name: Merge OBM configuration files
   assemble: src=/etc/obm/conf dest=/etc/obm/obm_conf.ini backup=yes
+  become: true
   tags: obm-sync
 
 - name: Create OBM-Sync configuration file
-  template: src=obm-sync.xml dest={{ conf_root }}/applis/obm-sync.xml backup=yes
+  template:
+    src: obm-sync.xml
+    dest: "{{ conf_root }}/applis/obm-sync.xml"
+    backup: yes
+  become: true
   notify:
       - Update Tomcat triggers
   tags: obm-sync
 
 - name: Fix perms on obm_conf.ini
+  become: true
   file: path=/etc/obm/obm_conf.ini mode=0644
   tags: obm-sync

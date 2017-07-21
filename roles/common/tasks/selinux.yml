@@ -2,6 +2,7 @@
 - name: Disable SELinux startup
   selinux: state=disabled
   when: ansible_selinux != false and ansible_selinux['status'] == 'enabled' and ansible_selinux['config_mode'] != 'disabled'
+  become: true
   tags:
       - common
       - selinux
@@ -9,6 +10,7 @@
 - name: Disable SELinux now
   command: setenforce 0
   when: ansible_selinux != false and ansible_selinux['status'] == 'enabled' and ansible_selinux['mode'] != 'permissive'
+  become: true
   tags:
       - common
       - selinux
@@ -16,6 +18,7 @@
 - name: YUM Uninstall SELinux
   yum: name=selinux-policy state=absent
   when: ansible_pkg_mgr == "yum"
+  become: true
   tags:
       - common
       - selinux
@@ -23,6 +26,7 @@
 - name: APT Uninstall SELinux
   apt: name=selinux-policy state=absent
   when: ansible_pkg_mgr == "apt"
+  become: true
   tags:
       - common
       - selinux

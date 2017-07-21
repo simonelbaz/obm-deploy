@@ -7,11 +7,9 @@
 
 [directoryservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 [certservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 [nosqlservers]
 obm-java1.regie-energie.qc.ca
@@ -19,32 +17,26 @@ obm-java2.regie-energie.qc.ca
 
 [dbservers]
 obm-java1.regie-energie.qc.ca
-obm-java2.regie-energie.qc.ca
 
 [dbmasters]
 obm-java1.regie-energie.qc.ca
 
 [webservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 [javaservers]
 obm-java1.regie-energie.qc.ca
-obm-java2.regie-energie.qc.ca
 
 [cyrusmupdateservers]
 
 [cyrusbackservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 [cyrusfrontservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 [smtpservers]
 obm-ui1.regie-energie.qc.ca
-obm-ui2.regie-energie.qc.ca
 
 # THE LAST PART IS REQUIRED
 # DO NOT EDIT AFTER THIS LINE

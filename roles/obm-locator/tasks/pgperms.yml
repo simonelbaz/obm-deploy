@@ -3,6 +3,7 @@
   file: name={{ datadir }}/pg_hba.d state=directory
   delegate_to: "{{ item }}"
   with_items: "{{ groups.databaseservers }}"
+  become: true
   tags:
     - obm-locator
 
@@ -10,6 +11,7 @@
   template: src=03-remote-obm-locator dest={{ datadir }}/pg_hba.d/03-remote-{{ inventory_hostname }}
   delegate_to: "{{ item }}"
   with_items: "{{ groups.databaseservers }}"
+  become: true
   notify:
     - Merge PostgreSQL configuration files
   tags:

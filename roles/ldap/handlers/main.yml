@@ -1,3 +1,4 @@
 - name: Restart LDAP
   service: name=slapd enabled=yes state=restarted
+  become: true
   tags: ldap

@@ -5,6 +5,7 @@
       line="listen_addresses = '*'"
       insertafter='^#listen_addresses'
       state=present
+  become: true
   notify: Restart Postgres
   tags: postgres
 
@@ -14,6 +15,7 @@
       line='standard_conforming_strings = off'
       insertafter='^#standard_conforming_strings'
       state=present
+  become: true
   notify: Restart Postgres
   tags: postgres
 
@@ -23,27 +25,32 @@
       line='max_connections = 300'
       insertafter='^max_connections ='
       state=present
+  become: true
   notify: Restart Postgres
   tags: postgres
 
 - name: Create PostgreSQL configuration directory
   file: name={{ datadir }}/pg_hba.d state=directory
+  become: true
   tags: postgres
 
 - name: Deploy PostgreSQL configuration header
   copy: src=00-header dest={{ datadir }}/pg_hba.d/00-header
+  become: true
   notify:
     - Merge PostgreSQL configuration files
   tags: postgres
 
 - name: Deploy PostgreSQL local configuration
   copy: src=02-local-peer dest={{ datadir }}/pg_hba.d/02-local-peer
+  become: true
   notify:
     - Merge PostgreSQL configuration files
   tags: postgres
 
 - name: Deploy PostgreSQL remote configuration
   copy: src=03-remote-ident dest={{ datadir }}/pg_hba.d/03-remote-ident
+  become: true
   notify:
     - Merge PostgreSQL configuration files
   tags:
@@ -52,6 +59,7 @@
 
 - name: Deploy PostgreSQL configuration footer
   copy: src=06-footer dest={{ datadir }}/pg_hba.d/06-footer
+  become: true
   notify:
     - Merge PostgreSQL configuration files
   tags: postgres

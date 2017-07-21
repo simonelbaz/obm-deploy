@@ -8,20 +8,22 @@
       - sudo
 
 - name: Remove Defaults requiretty
-  lineinfile: >
-    dest=/etc/sudoers
-    regex="Defaults\s+requiretty\s*$"
-    state="absent"
+  lineinfile:
+    path: /etc/sudoers
+    regexp: 'Defaults\s+requiretty\s*$'
+    state: absent
+  become: true
   tags:
       - common
       - sudo
 
 - name: Disable requiretty if present in any other entries
-  lineinfile: >
-    dest=/etc/sudoers
-    regex="^(Defaults.*?),?\s*requiretty\s*(,?)\s*(.*?)$"
-    line="\1\2\3"
-    backrefs=yes
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^(Defaults.*?),?\s*requiretty\s*(,?)\s*(.*?)$'
+    line: '\1\2\3'
+    backrefs: yes
+  become: true
   tags:
       - common
       - sudo

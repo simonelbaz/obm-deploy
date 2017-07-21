@@ -5,6 +5,7 @@
   notify:
    - Approximate date using local host
    - Set approximate system date
+  become: true
   tags:
       - common
       - ntp
@@ -15,6 +16,7 @@
   notify:
    - Approximate date using local host
    - Set approximate system date
+  become: true
   tags:
       - common
       - ntp
@@ -23,6 +25,7 @@
   service: name={{ ntp_service_name }} state=started enabled=yes
   notify:
    - Update system date
+  become: true
   tags:
       - common
       - ntp
@@ -38,6 +41,7 @@
   notify:
    - Restart NTP service
    - Update system date
+  become: true
   tags:
       - common
       - ntp
@@ -50,6 +54,7 @@
    - Restart NTP service
    - Update system date
   when: ntp_server is defined
+  become: true
   tags:
       - common
       - ntp

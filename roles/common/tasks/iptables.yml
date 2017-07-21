@@ -1,7 +1,8 @@
 ---
 - name: Stop IPTables services
-  service: name={{ item }} state=stopped enabled=no
+  service: name="{{ item }}" state=stopped enabled=no
   with_items: "{{ iptables_services }}"
+  become: true
   tags:
       - common
       - iptables

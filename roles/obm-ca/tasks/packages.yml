@@ -1,6 +1,9 @@
 ---
 - name: YUM Install OBM-CA
-  yum: pkg=obm-ca state=present
+  yum:
+    pkg: obm-ca
+    state: present
+  become: true
   when: ansible_pkg_mgr == "yum"
   tags: obm-ca
 

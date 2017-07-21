@@ -9,9 +9,10 @@ class FilterModule(object):
                 }
 
     def get_ip(self, host, network):
-        if host["ansible_default_ipv4"]["network"] == network:
+        if "ansible_default_ipv4" in host and host["ansible_default_ipv4"]["network"] == network:
             return host["ansible_default_ipv4"]["address"]
-        for iface in host["ansible_interfaces"]:
-            if host["ansible_" + iface]['ipv4']["network"] == network:
-                return host["ansible_" + iface]['ipv4']["address"]
+        if "ansible_interfaces" in host:
+            for iface in host["ansible_interfaces"]:
+                if host["ansible_" + iface]['ipv4']["network"] == network:
+                    return host["ansible_" + iface]['ipv4']["address"]
 

@@ -5,6 +5,7 @@
     regexp="^keepcache=0$"
     line="keepcache=1"
     backrefs=yes
+  become: true
   tags:
       - common
       - yum
@@ -15,6 +16,7 @@
     regexp="^proxy=.*$"
     line="proxy=http://{{ prx_host }}:{{ prx_port }}/"
   when: proxy_host is defined
+  become: true
   tags:
       - common
       - yum
@@ -25,6 +27,7 @@
     regexp="^proxy=.*$"
     state=absent
   when: proxy_host is not defined
+  become: true
   tags:
       - common
       - yum
@@ -38,6 +41,7 @@
       - { var: proxy_username, value: "{{ prx_username }}" }
       - { var: proxy_password, value: "{{ prx_password }}" }
   when: proxy_username is defined
+  become: true
   tags:
       - common
       - yum
@@ -51,6 +55,7 @@
       - prx_username
       - prx_password
   when: proxy_username is not defined
+  become: true
   tags:
       - common
       - yum
@@ -60,6 +65,7 @@
     src=releasever
     dest=/etc/yum/vars/releasever
     owner=root group=root mode=0644
+  become: true
   tags:
       - common
       - yum
@@ -70,6 +76,7 @@
     line="\1"
     dest=/etc/yum/vars/releasever
     backrefs=yes
+  become: true
   tags:
       - common
       - yum

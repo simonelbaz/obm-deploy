@@ -1,10 +1,12 @@
 ---
 - name: YUM Install OBM Core (db scripts)
   yum: name=obm-core
+  become: true
   when: ansible_pkg_mgr == "yum"
   tags: obm-db
 
 - name: APT Install OBM Core (db scripts)
   apt: name=obm-core
+  become: true
   when: ansible_pkg_mgr == "apt"
   tags: obm-db

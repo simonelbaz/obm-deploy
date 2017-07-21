@@ -1,7 +1,10 @@
 ---
 - name: YUM Install PostgreSQL Server
-  yum: pkg={{ postgresql_pkg[ansible_distribution_major_version] }}
+  yum:
+    name: "{{ postgresql_pkg.v7 }}"
+    state: present
   register: yum_command_result
+  become: true
   when: ansible_pkg_mgr == "yum"
   tags: postgres
 
@@ -28,11 +31,15 @@
 
 - name: Initialize PostgreSQL Server
   command: sh -c "{{ postgresql_init[ansible_distribution_major_version] }}"
-  when: yum_command_result.changed and ansible_os_family == "RedHat"
+  register: command_result
+  failed_when: "command_result.stderr != ''"
+  become: true
+  when: ansible_os_family == "RedHat"
   tags: postgres
 
 - name: Start PostgreSQL service
   service: name=postgresql state=started enabled=yes
+  become: true
   when: ansible_os_family == "RedHat"
   tags: postgres
 

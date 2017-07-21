@@ -3,6 +3,7 @@
   assemble: src={{ datadir }}/pg_hba.d dest={{ datadir }}/pg_hba.conf backup=yes
   delegate_to: "{{ item }}"
   with_items: "{{ groups.databaseservers }}"
+  become: true
   notify:
     - Reload Postgres
   tags:
@@ -12,6 +13,7 @@
 - name: Reload Postgres
   service: name=postgresql state=reloaded
   delegate_to: "{{ db_master_host }}"
+  become: true
   tags:
    - postgres-common
    - pgperms

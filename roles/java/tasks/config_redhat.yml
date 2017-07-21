@@ -44,5 +44,6 @@
 
 - name: Configure Main OpenJDK 7 Java alternatives
   command: alternatives --auto java
+  become: true
   when: major_version | version_compare('3.0', '>=')
   tags: java

@@ -1,5 +1,6 @@
 ---
 - name: Update Tomcat triggers
   command: /usr/bin/obm-tomcat-trigger
+  become: true
   when: ansible_pkg_mgr == "yum"
   tags: obm-tomcat

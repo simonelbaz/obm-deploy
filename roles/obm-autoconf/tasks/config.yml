@@ -1,14 +1,17 @@
 ---
 - name: Deploy OBM Autoconf configuration
   template: src=02-autoconf.ini dest=/etc/obm/conf/02-autoconf.ini
+  become: true
   tags: obm-autoconf
 
 - name: Merge OBM configuration files
   assemble: src=/etc/obm/conf dest=/etc/obm/obm_conf.ini backup=yes
+  become: true
   tags: obm-autoconf
 
 - name: Create OBM Autoconf XPI directory
   file: path={{ xpi_dir }} state=directory
+  become: true
   tags: obm-autoconf
 
 - name: Sync obm-autoconf-client directory
@@ -18,18 +21,21 @@
       dest_port="{{ ssh_port }}"
       archive=yes
       delete=yes
+  become: true
   tags: obm-autoconf
 
 - name: Configure OBM Autoconf client
   template: >
       src=roles/obm-autoconf/files/obm-autoconf-client/modules/specificRules.jsm
       dest=/usr/share/obm-autoconf-client/modules/specificRules.jsm
+  become: true
   tags: obm-autoconf
 
 - name: Deploy Lightning XPIs for TB (mirror mode)
   copy: > 
       src="resources/xpi/lightning/tb{{ item.tb_version }}/latest-{{ item.os }}.xpi"
       dest="{{ xpi_dir }}/lightning-tb{{ item.tb_version }}-{{ item.os }}.xpi" 
+  become: true
   with_items:
    - { tb_version: '24', os: linux}
    - { tb_version: '24', os: windows}
@@ -45,6 +51,7 @@
       url="{{ lightning_xpi_baseurl }}/tb{{ item.tb_version }}/latest-{{ item.os }}.xpi"
       dest="{{ xpi_dir }}/lightning-tb{{ item.tb_version }}-{{ item.os }}.xpi"
       force=yes
+  become: true
   with_items:
    - { tb_version: '24', os: linux}
    - { tb_version: '24', os: windows}
@@ -61,6 +68,7 @@
       url="{{ lightning_xpi_baseurl }}/tb{{ item.tb_version }}/latest-{{ item.os }}.xpi"
       dest="{{ xpi_dir }}/lightning-tb{{ item.tb_version }}-{{ item.os }}.xpi"
       force=yes
+  become: true
   with_items:
    - { tb_version: '24', os: linux}
    - { tb_version: '24', os: windows}
@@ -75,6 +83,7 @@
   copy: >
       src="resources/xpi/connector/tb24/obm-connector-latest.xpi"
       dest="{{ xpi_dir }}/obm-connector-latest.xpi"
+  become: true
   when: mode == "mirror"
   tags: obm-autoconf
 
@@ -84,6 +93,7 @@
       dest="{{ xpi_dir }}/obm-connector-latest.xpi"
       force=yes
   environment: proxy_env
+  become: true
   when: mode == "internet" and proxy_host is defined
   tags: obm-autoconf
 
@@ -92,6 +102,7 @@
       url="{{ obm_xpi_baseurl }}/tb24/obm-connector-latest.xpi"
       dest="{{ xpi_dir }}/obm-connector-latest.xpi"
       force=no
+  become: true
   when: mode == "internet" and proxy_host is not defined
   tags: obm-autoconf
 
@@ -104,27 +115,32 @@
 - name: Get Lightning XPI version for TB31
   shell: >
       unzip -p {{ xpi_dir }}/lightning-tb31-linux.xpi install.rdf | egrep '<(em:version|version)>' | sed 's/.*<.*>\(.*\)<\/.*>.*/\1/'
+  become: true
   register: lightning31_version
   tags: obm-autoconf
 
 - name: Get OBM Connector version for TB24
   shell: >
       unzip -p {{ xpi_dir }}/obm-connector-latest.xpi install.rdf | egrep '<(em:version|version)>' | sed 's/.*<.*>\(.*\)<\/.*>.*/\1/'
+  become: true
   register: connector_version
   tags: obm-autoconf
 
 - name: Get OBM Autoconf client version for TBxx
   shell: >
       unzip -p {{ xpi_dir }}/obm-autoconf-client.xpi install.rdf | egrep '<(em:version|version)>' | sed 's/.*<.*>\(.*\)<\/.*>.*/\1/'
+  become: true
   register: autoconf_version
   tags: obm-autoconf
 
 - name: Create OBM-Autoconf configuration file
   template: src=config.xml dest=/usr/share/obm-autoconf/
+  become: true
   notify:
     - Update Tomcat triggers
   tags: obm-autoconf
 
 - name: Fix perms on obm_conf.ini
   file: path=/etc/obm/obm_conf.ini mode=0644
+  become: true
   tags: obm-autoconf

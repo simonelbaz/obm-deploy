@@ -26,7 +26,8 @@ config_version: 0.4
 #### OBM configuration ####
 
 ## OBM version
-#obm_version: 3.1.6
+#obm_version: 3.2.1-2
+obm_version: 3.2.1
 
 ## Public URL of the OBM web interface
 #obm_external_url: "{{ inventory_hostname }}"
@@ -41,12 +42,12 @@ config_version: 0.4
 #obm_db_master_host: "{{ groups['dbmasters'][0] }}"
 
 ## Database configuration
-#obm_db_user: obm
-#obm_db_pass: obm
-#obm_db_name: obm
+obm_db_user: obm
+obm_db_pass: EiMot5ai
+obm_db_name: obm
 
 ## Language of the database (fr/en)
-#obm_language: fr
+obm_language: fr
 
 #### Cassandra cluster configuration
 ## Use it only with OBM 3.x

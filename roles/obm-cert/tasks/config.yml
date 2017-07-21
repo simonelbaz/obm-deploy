@@ -2,6 +2,7 @@
 ######################## CREATE NEEDED DIRECTORIES #####################################
 - name: Create CA and certificate directories if needed
   file: path={{ item }} state=directory recurse=true mode=0755
+  become: true
   with_items:
       - "{{ ca_file | dirname }}"
       - "{{ cert_file | dirname }}"
@@ -15,6 +16,7 @@
   debug: 
       msg: "You can't customize your CA if you don't customize your certificate"
   when: ca_file != default_ca_file and cert_file == default_cert_file
+  become: true
   failed_when: True
   tags: obm-cert
 
@@ -30,6 +32,7 @@
       msg: "You can't customize your key if you don't customize your certificate"
   when: key_file != default_cert_file and cert_file == default_cert_file
   failed_when: True
+  become: true
   tags: obm-cert
 #########################################################################################
 
@@ -62,6 +65,7 @@
       validate_md5=yes
       flat=yes
   delegate_to: "{{ ca_host }}"
+  become: true
   when: ca_file == default_ca_file or check_cafile.stat.isfile == False
   tags: obm-cert
 
@@ -69,12 +73,14 @@
   file: >
       path="{{ default_ca_file | dirname }}"
       state=directory
+  become: true
   tags: obm-cert
 
 - name: Push generic CA file to remote host
   copy: >
       src=certificates/{{ ca_host }}/{{ default_ca_file | basename }}
       dest={{ default_ca_file }}
+  become: true
   when: ca_file == default_ca_file or check_cafile.stat.isfile == False
   tags: obm-cert
 
@@ -82,6 +88,7 @@
   copy: >
       src=certificates/{{ ca_host }}/{{ ca_file | basename }}
       dest={{ ca_file }}
+  become: true
   when: ca_file != default_ca_file and check_cafile.stat.isfile == True
   tags: obm-cert
 
@@ -92,6 +99,7 @@
   notify:
       - Add a generic CA cert to OBM-Autoconf configuration
       - Build OBM-Autoconf client
+  become: true
   when: ( ca_file == default_ca_file or check_cafile.stat.isfile == False ) and inventory_hostname in groups['autoconfservers']
   tags: obm-cert
 
@@ -102,6 +110,7 @@
   notify:
       - Add a generic CA cert to OBM-Autoconf configuration
       - Build OBM-Autoconf client
+  become: true
   when: ( ca_file != default_ca_file and check_cafile.stat.isfile == True ) and inventory_hostname in groups['autoconfservers']
   tags: obm-cert
 #########################################################################################
@@ -112,6 +121,7 @@
       creates={{ default_cert_file | dirname }}/{{ entry_point }}_signed.pem
       /usr/share/obm-ca/createcert.sh "{{ entry_point }}"
   delegate_to: "{{ ca_host }}"
+  become: true
   when: cert_file == default_cert_file or check_certfile.stat.isfile == False
   tags: obm-cert
 
@@ -122,6 +132,7 @@
       validate_md5=yes
       flat=yes
   delegate_to: "{{ ca_host }}"
+  become: true
   when: cert_file == default_cert_file or check_certfile.stat.isfile == False
   tags: obm-cert
 
@@ -129,6 +140,7 @@
   copy: >
       src=certificates/{{ entry_point }}/{{ entry_point }}_signed.pem
       dest={{ default_cert_file | dirname }}/{{ entry_point }}_signed.pem
+  become: true
   when: cert_file == default_cert_file or check_certfile.stat.isfile == False
   tags: obm-cert
 
@@ -137,6 +149,7 @@
       src="{{ default_cert_file | dirname }}/{{ entry_point }}_signed.pem"
       dest="{{ default_cert_file }}"
       state=link
+  become: true
   when: cert_file == default_cert_file or check_certfile.stat.isfile == False
   tags: obm-cert
 ##########################################################################################
@@ -146,6 +159,7 @@
   copy: >
       src=certificates/{{ entry_point }}/{{ cert_file | basename }}
       dest={{ cert_file }}
+  become: true
   when: cert_file != default_cert_file and check_certfile.stat.isfile == True
   tags: obm-cert
 
@@ -153,6 +167,7 @@
   copy: >
       src=certificates/{{ entry_point }}/{{ key_file | basename }}
       dest={{ key_file }}
+  become: true
   when: key_file != default_cert_file and check_keyfile.stat.isfile == True
   tags: obm-cert
 
@@ -161,6 +176,7 @@
       src="{{ cert_file }}"
       dest="{{ default_cert_file }}"
       state=link
+  become: true
   when: cert_file != default_cert_file and check_certfile.stat.isfile == True
   tags: obm-cert
 ##########################################################################################

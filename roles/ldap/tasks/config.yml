@@ -5,11 +5,13 @@
       dest={{ ldap_conf_dir }}/slapd.conf
       owner=root group={{ ldap_group }} mode=0640
       backup=yes
+  become: true
   register: command_result
   tags: ldap
 
 - name: RPM Copy ldap sysconfig configuration
   template: src=ldap dest={{ ldap_conf_dst[ansible_distribution_major_version] }} backup=yes
+  become: true
   when: ansible_os_family == "RedHat"
   notify:
       - Restart LDAP
@@ -17,6 +19,7 @@
 
 - name: APT Copy ldap default configuration
   template: src=slapd dest=/etc/default/slapd backup=yes
+  become: true
   when: ansible_os_family == "Debian"
   notify:
       - Restart LDAP

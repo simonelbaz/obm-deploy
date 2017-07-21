@@ -15,6 +15,7 @@
   copy: >
         src=opush.repo
         dest=/etc/yum.repos.d/opush.repo
+  become: true
   when: major_version | version_compare('3.0', '>=')
   tags: obm-conf
 
@@ -35,6 +36,7 @@
 - name: Enable OBM RPM repository (internet mode) [without proxy]
   yum: name=http://rpm.obm.org/release/obm-release-{{ major_version }}.noarch.rpm
   environment: "{{ proxy_env }}"
+  become: true
   when: mode == "internet" and proxy_host is not defined
   tags: obm-conf
 
